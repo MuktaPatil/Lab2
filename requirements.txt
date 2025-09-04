@@ -1,3 +1,5 @@
 pip install openai
 
 pip install PyPDF2
+
+pip install streamlit
