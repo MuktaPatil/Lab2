@@ -27,7 +27,7 @@ st.title("📄 HW1: Document question answering")
 # Ask user for their OpenAI API key via `st.text_input`.
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
 # via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.secrets['api_key']
+openai_api_key = st.secrets['openai_api_key']
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 else:
@@ -49,35 +49,34 @@ else:
         else:
             st.error("Unsupported file type.")
 
+      # If document is uploaded, generate summary
+    if document:
+        st.subheader("Summary")
+        
+         # Sidebar: Language selection
+        st.sidebar.header("Language Options")
+        language = st.sidebar.selectbox(
+            "Select language for summary:",
+            ["English", "Spanish", "French", "German", "Chinese"]
+        )
+
+    
     # Ask the user for a question via `st.text_area`.
-    question = st.text_area(
-        "Now ask a question about the document!",
-        placeholder="Is the course hard?",
-        disabled=not uploaded_file,
-    )
-
-    if document and question:
-        models = [
-            "gpt-3.5-turbo",
-            "gpt-4.1",
-            "gpt-5-chat-latest",
-            "gpt-5-nano"
-        ]
-
-        for model in models:
-            with st.expander(f"Answer using {model}", expanded=True):
+    question = f"Is the course hard? {st.session_state.instruction}"
+    if document and 'model' in st.session_state:
+            with st.expander(f"Answer using {st.session_state.model}", expanded=True):
                 messages = [
                     {
                         "role": "user",
-                        "content": f"Here's a document: {document}\n\n---\n\n{question}",
+                        "content": f"Here's a document: {document}\n\n---\n\n{question} in language {language}",
                     }
                 ]
                 try:
                     stream = client.chat.completions.create(
-                        model=model,
+                        model=st.session_state.model,
                         messages=messages,
                         stream=True,
                     )
                     st.write_stream(stream)
                 except Exception as e:
-                    st.error(f"Error with {model}: {e}")
+                    st.error(f"Error with {st.session_state.model}: {e}")
