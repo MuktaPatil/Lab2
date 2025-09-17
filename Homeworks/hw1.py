@@ -3,6 +3,10 @@ from openai import OpenAI
 import PyPDF2  # best for simple text doc like the one we are going to use here
 
 
+widget =  st.sidebar.radio("Summary options", ["Summarize the document in 100 words","Summarize the document in 2 connecting paragraphs","Summarize the document in 5 bullet points."])
+
+st.session_state['instruction'] = widget
+
 def extract_text_from_pdf(uploaded_file):
     reader = PyPDF2.PdfReader(uploaded_file)
     text = ''
@@ -59,6 +63,7 @@ else:
             "Select language for summary:",
             ["English", "Spanish", "French", "German", "Chinese"]
         )
+
 
     
     # Ask the user for a question via `st.text_area`.

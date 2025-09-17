@@ -4,3 +4,6 @@ streamlit
 beautifulsoup4
 anthropic
 google-generativeai
+tiktoken
+requests
+cohere
