@@ -14,25 +14,21 @@ chroma_client = chromadb.PersistentClient(chromaDB_path)
 
 st.title("Lab 4: Embeddings")
 
-# Model select in sidebar
 openAI_model = st.sidebar.selectbox("Which Model?", ("mini", "regular"))
 if openAI_model == "mini":
     model_to_use = "gpt-4o-mini"
 else:
     model_to_use = "gpt-4o"
 
-# Create an OpenAI client
 if "client" not in st.session_state:
     api_key = st.secrets["openai_api_key"]
     st.session_state.openai_client = OpenAI(api_key=api_key)
 
 
-# ---------------- VECTOR DB FUNCTION ----------------
 def build_lab4_vectorDB(pdf_folder="./pdfs"):
     if "Lab4_vectorDB" in st.session_state:
         return
 
-    # Create or get collection
     collection = chroma_client.get_or_create_collection("Lab4Collection")
 
     # Go through PDFs in given folder
@@ -63,17 +59,16 @@ def build_lab4_vectorDB(pdf_folder="./pdfs"):
             metadatas=[{"filename": pdf_file}]
         )
 
-    # Save collection to session_state
     st.session_state.Lab4_vectorDB = collection
     st.write("✅ VectorDB created and stored in session_state.")
 
 
-# ---------------- INITIALIZE VECTOR DB ----------------
+
 if "Lab4_vectorDB" not in st.session_state:
     build_lab4_vectorDB("./pdfs")
 
 
-# ---------------- UI: DROPDOWN + TEXTBOX + SUBMIT ----------------
+
 col1, col2 = st.columns([1, 2])
 
 with col1:
@@ -84,7 +79,6 @@ with col2:
 
 submit = st.button("Submit")
 
-# ---------------- RUN EMBEDDINGS WHEN SUBMIT IS CLICKED ----------------
 if submit:
     if not topic and not custom_query:
         st.warning("Please select a topic or enter a query.")
