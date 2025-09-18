@@ -3,21 +3,18 @@ from openai import OpenAI
 import os
 from PyPDF2 import PdfReader
 
-
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
-
 import chromadb
 
 chromaDB_path = "./chromaDB_labs"
-
 chroma_client = chromadb.PersistentClient(chromaDB_path)
-collection = chroma_client.get_or_create_collection("Lab4Collection")
-
 
 st.title("Lab 4: Embeddings")
+
+# Model select in sidebar
 openAI_model = st.sidebar.selectbox("Which Model?", ("mini", "regular"))
 if openAI_model == "mini":
     model_to_use = "gpt-4o-mini"
@@ -29,7 +26,8 @@ if "client" not in st.session_state:
     api_key = st.secrets["openai_api_key"]
     st.session_state.openai_client = OpenAI(api_key=api_key)
 
-# Initialize state
+
+# ---------------- VECTOR DB FUNCTION ----------------
 def build_lab4_vectorDB(pdf_folder="./pdfs"):
     if "Lab4_vectorDB" in st.session_state:
         return
@@ -69,31 +67,47 @@ def build_lab4_vectorDB(pdf_folder="./pdfs"):
     st.session_state.Lab4_vectorDB = collection
     st.write("✅ VectorDB created and stored in session_state.")
 
+
+# ---------------- INITIALIZE VECTOR DB ----------------
 if "Lab4_vectorDB" not in st.session_state:
-    build_lab4_vectorDB("./pdfs")  # change path if your PDFs are elsewhere
+    build_lab4_vectorDB("./pdfs")
 
 
+# ---------------- UI: DROPDOWN + TEXTBOX + SUBMIT ----------------
+col1, col2 = st.columns([1, 2])
 
-topic = st.sidebar.selectbox("Topic", ("Text Mining", "GenAI"))
+with col1:
+    topic = st.selectbox("Choose a topic", ("", "Text Mining", "GenAI"))
 
-if "Lab4_vectorDB" in st.session_state:
-    openai_client = st.session_state.openai_client
+with col2:
+    custom_query = st.text_input("...or type your own query")
 
-    # Get embedding for the chosen topic
-    response = openai_client.embeddings.create(
-        input=topic,
-        model="text-embedding-3-small"
-    )
-    query_embedding = response.data[0].embedding
+submit = st.button("Submit")
 
-    # Search the vector DB
-    collection = st.session_state.Lab4_vectorDB
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=3  # top 3 closest docs
-    )
+# ---------------- RUN EMBEDDINGS WHEN SUBMIT IS CLICKED ----------------
+if submit:
+    if not topic and not custom_query:
+        st.warning("Please select a topic or enter a query.")
+    else:
+        query_text = custom_query if custom_query else topic
+        openai_client = st.session_state.openai_client
 
-    # Show results
-    for i in range(len(results['documents'][0])):
-        doc_id = results['ids'][0][i]
-        st.write(f"The following file/syllabus might be helpful: {doc_id}")
+        # Get embedding for the chosen input
+        response = openai_client.embeddings.create(
+            input=query_text,
+            model="text-embedding-3-small"
+        )
+        query_embedding = response.data[0].embedding
+
+        # Search the vector DB
+        collection = st.session_state.Lab4_vectorDB
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=3  # top 3 closest docs
+        )
+
+        # Show results
+        st.subheader(f"🔎 Results for: {query_text}")
+        for i in range(len(results['documents'][0])):
+            doc_id = results['ids'][0][i]
+            st.write(f"{i+1}. The following file/syllabus might be helpful: **{doc_id}**")
