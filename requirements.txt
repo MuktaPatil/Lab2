@@ -7,3 +7,5 @@ google-generativeai
 tiktoken
 requests
 cohere
+chromadb
+pysqlite3-binary
