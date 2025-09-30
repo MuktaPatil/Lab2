@@ -99,14 +99,14 @@ def get_relevant_info(query, top_k=3):
 
 
 # Streamlit UI
-st.title("HW5: Intelligent iSchool Student Organizations Chatbot")
+st.title("HW5: Intelligent iSchool Student Orgs. Chatbot")
 
 model_choice = st.sidebar.selectbox(
     "Select LLM",
     ("gpt-5-nano", "gemini-2.5-pro", "claude-opus-4-1-20250805")
 )
 
-st.subheader("💬 Chat with the Bot")
+st.subheader("Chat with the Bot")
 query = st.chat_input("Ask me about iSchool student organizations...")
 
 
