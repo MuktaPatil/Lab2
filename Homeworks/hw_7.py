@@ -299,7 +299,7 @@ def main():
         top_k = st.slider("Number of articles to analyze", 3, 20, 10)
     
     # Hardcoded CSV path - change this to your file path
-    CSV_PATH = "/workspaces/Lab2/Example_news_info_for_testing.csv" 
+    CSV_PATH = "Example_news_info_for_testing.csv" 
     
     try:
         df = pd.read_csv(CSV_PATH)
