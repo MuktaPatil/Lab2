@@ -9,3 +9,5 @@ requests
 cohere
 chromadb
 pysqlite3-binary
+sentence-transformers
+scikit-learn
