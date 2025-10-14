@@ -343,13 +343,14 @@ def main():
                 st.markdown(result['response'])
                 
                 # Display tokens
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.metric("Input Tokens", result['tokens']['input'])
-                with col2:
-                    st.metric("Output Tokens", result['tokens']['output'])
-                with col3:
-                    st.metric("Total Tokens", result['tokens']['total'])
+                with st.expander("Show token usage", expanded=False):
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Input Tokens", result['tokens']['input'])
+                    with col2:
+                        st.metric("Output Tokens", result['tokens']['output'])
+                    with col3:
+                        st.metric("Total Tokens", result['tokens']['total'])
                 
                 # Display articles
                 st.subheader("📰 Top Articles")
