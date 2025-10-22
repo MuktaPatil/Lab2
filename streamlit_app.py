@@ -22,8 +22,9 @@ lab_2 = st.Page("Labs/lab2.py", title="Lab 2", icon=":material/book_2:")
 lab_3 = st.Page("Labs/lab3.py", title="Lab 3", icon=":material/book_2:")
 lab_4= st.Page("Labs/lab4.py", title="Lab 4", icon=":material/book_2:")
 lab_5= st.Page("Labs/lab5.py", title="Lab 5", icon=":material/book_2:")
+lab_lang= st.Page("Labs/LangChain_lab.py", title="Langchain", icon=":material/book_2:")
 
-pg = st.navigation([hw_1, hw_2,hw_3, hw_4, hw_5, hw_7, lab_1, lab_2, lab_3, lab_4, lab_5])
-st.set_page_config(page_title="Data manager", page_icon=":material/edit:")
+pg = st.navigation([hw_1, hw_2,hw_3, hw_4, hw_5, hw_7, lab_1, lab_2, lab_3, lab_4, lab_5, lab_lang])
+# st.set_page_config(page_title="Data manager", page_icon=":material/edit:")
 pg.run()
 
