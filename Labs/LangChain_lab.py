@@ -77,7 +77,7 @@ def initialize_vectorstore():
 # MAIN APP START
 
 # st.set_page_config(page_title="LangChain Research Paper Agent", page_icon="🎯")
-st.title("🎯 LangChain Research Paper Agent")
+st.title("LangChain Research Paper Agent")
 st.markdown("This Streamlit app uses LangChain + OpenAI to explore arXiv papers interactively.")
 
 # Initialize session state
