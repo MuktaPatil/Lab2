@@ -1,3 +1,9 @@
+'''
+I chose this lab because of the versatility that LangChain offers. I feel it has stronger real-world applications, 
+at least right now. I also want to learn how to build reusable and modular code that can handle complex problems more efficiently.
+I am more attracted to the flexibility offered by Langchain through its Agents.
+'''
+
 import sys, re, streamlit as st, pandas as pd, os
 import pysqlite3
 sys.modules["sqlite3"] = pysqlite3
